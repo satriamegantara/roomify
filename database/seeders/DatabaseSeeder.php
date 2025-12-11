@@ -15,11 +15,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create Admin User (if not exists)
+        User::firstOrCreate(
+            ['email' => 'admin@roomify.test'],
+            [
+                'name' => 'Admin Roomify',
+                'password' => bcrypt('admin123456'),
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Create Test User (Penyewa) (if not exists)
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+                'role' => 'penyewa',
+            ]
+        );
+
+        // Create Test Pemilik (if not exists)
+        User::firstOrCreate(
+            ['email' => 'pemilik@example.com'],
+            [
+                'name' => 'Test Pemilik',
+                'password' => bcrypt('password'),
+                'role' => 'pemilik',
+            ]
+        );
     }
 }

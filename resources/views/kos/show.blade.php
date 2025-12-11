@@ -91,7 +91,7 @@
                         <a href="{{ route('booking.create', $kos) }}" class="btn btn-primary btn-lg">
                             <i class="bi bi-calendar-check me-2"></i>Booking Sekarang
                         </a>
-                        <a href="#chat" class="btn btn-outline-primary">
+                        <a href="{{ route('chat.start', $kos->pemilik) }}" class="btn btn-outline-primary">
                             <i class="bi bi-chat-dots me-2"></i>Hubungi Pemilik
                         </a>
                     </div>
@@ -184,7 +184,7 @@
                 <h5>{{ $kos->pemilik->name }}</h5>
                 <p class="text-muted small mb-3">{{ $kos->pemilik->email }}</p>
                 @auth
-                    <a href="#" class="btn btn-sm btn-outline-primary w-100">
+                    <a href="{{ route('chat.start', $kos->pemilik) }}" class="btn btn-sm btn-outline-primary w-100">
                         <i class="bi bi-chat-dots me-2"></i>Hubungi
                     </a>
                 @endauth

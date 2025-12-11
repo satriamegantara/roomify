@@ -13,30 +13,29 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // Check if user is owner
-        $ownedKos = $user->kosAsOwner;
-        $totalKos = $ownedKos->count();
-        $activeBookings = Booking::whereIn('kos_id', $ownedKos->pluck('id'))
-            ->where('status', 'aktif')
-            ->count();
-        $totalRevenue = Pembayaran::whereIn('kos_id', $ownedKos->pluck('id'))
-            ->where('status', 'lunas')
-            ->sum('jumlah');
+        // Penyewa dashboard data
+        $myBookings = $user->bookings()->with(['kos'])->whereNot('status', 'dibatalkan')->latest()->get();
+        $activeBookings = $myBookings->where('status', 'aktif')->count();
+        $pendingBookings = $myBookings->where('status', 'pending')->count();
+        $completedBookings = $myBookings->where('status', 'selesai')->count();
 
-        // Tenant stats
-        $myBookings = $user->bookings()->count();
-        $myPayments = $user->pembayarans()->sum('jumlah');
-        $pendingPayments = $user->pembayarans()
-            ->where('status', 'pending')
-            ->sum('jumlah');
+        $myPayments = $user->pembayarans()->with(['kos'])->latest()->get();
+        $totalPaid = $myPayments->where('status', 'lunas')->sum('jumlah');
+        $pendingPayments = $myPayments->where('status', 'pending')->count();
+        $pendingAmount = $myPayments->where('status', 'pending')->sum('jumlah');
+        $latePayments = $myPayments->where('status', 'terlambat')->count();
 
-        return view('dashboard', compact(
-            'totalKos',
-            'activeBookings',
-            'totalRevenue',
+        return view('penyewa.dashboard', compact(
+            'user',
             'myBookings',
+            'activeBookings',
+            'pendingBookings',
+            'completedBookings',
             'myPayments',
-            'pendingPayments'
+            'totalPaid',
+            'pendingPayments',
+            'pendingAmount',
+            'latePayments'
         ));
     }
 }

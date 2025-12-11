@@ -9,6 +9,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PemilikDashboardController;
 use App\Http\Controllers\AdminKosController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,7 @@ Route::prefix('pemilik')->name('pemilik.')->middleware(['auth', 'pemilik'])->gro
 
 // Admin Kos Management Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/kos', [AdminKosController::class, 'index'])->name('kos.index');
     Route::post('/kos/{kos}/verify', [AdminKosController::class, 'verify'])->name('kos.verify');
     Route::post('/kos/{kos}/status', [AdminKosController::class, 'updateStatus'])->name('kos.status');
@@ -80,6 +82,7 @@ Route::middleware('auth')->group(function () {
     // Chat
     Route::prefix('chat')->name('chat.')->group(function () {
         Route::get('/', [ChatController::class, 'index'])->name('index');
+        Route::get('/start/{user}', [ChatController::class, 'startChat'])->name('start');
         Route::get('/{chat}', [ChatController::class, 'show'])->name('show');
         Route::post('/send', [ChatController::class, 'send'])->name('send');
     });
