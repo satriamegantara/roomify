@@ -85,30 +85,129 @@ class PemilikDashboardController extends Controller
         return view('pemilik.kos', compact('kos'));
     }
 
-    public function bookings()
+    public function bookings(Request $request)
     {
         $user = Auth::user();
-        $bookings = Booking::whereHas('kos', function ($query) use ($user) {
-            $query->where('pemilik_id', $user->id);
-        })
-            ->with(['kos', 'penyewa'])
-            ->latest()
-            ->paginate(15);
+
+        $query = Booking::whereHas('kos', function ($q) use ($user) {
+            $q->where('pemilik_id', $user->id);
+        })->with(['kos', 'penyewa']);
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Search by penyewa name
+        if ($request->filled('search')) {
+            $query->whereHas('penyewa', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $bookings = $query->latest()->paginate(15)->withQueryString();
 
         return view('pemilik.bookings.index', compact('bookings'));
     }
 
-    public function pembayaran()
+    public function showBooking(Booking $booking)
+    {
+        if ($booking->kos->pemilik_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('pemilik.bookings.show', compact('booking'));
+    }
+
+    public function approvePage(Booking $booking)
+    {
+        if ($booking->kos->pemilik_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('pemilik.bookings.approve', compact('booking'));
+    }
+
+    public function rejectPage(Booking $booking)
+    {
+        if ($booking->kos->pemilik_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('pemilik.bookings.reject', compact('booking'));
+    }
+
+    public function approveBooking(Booking $booking)
+    {
+        // Authorize: pastikan kos milik user yang login
+        if ($booking->kos->pemilik_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Gunakan status yang valid sesuai schema: pending, aktif, selesai, dibatalkan
+        $booking->update(['status' => 'aktif']);
+
+        return redirect()
+            ->route('pemilik.bookings.index')
+            ->with('success', 'Booking berhasil disetujui!');
+    }
+
+    public function rejectBooking(Booking $booking)
+    {
+        // Authorize: pastikan kos milik user yang login
+        if ($booking->kos->pemilik_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $booking->update(['status' => 'dibatalkan']);
+
+        return redirect()
+            ->route('pemilik.bookings.index')
+            ->with('success', 'Booking berhasil ditolak.');
+    }
+
+    public function pembayaran(Request $request)
     {
         $user = Auth::user();
-        $pembayarans = Pembayaran::whereHas('kos', function ($query) use ($user) {
-            $query->where('pemilik_id', $user->id);
-        })
-            ->with(['kos', 'penyewa'])
-            ->latest()
-            ->paginate(15);
 
-        return view('pemilik.pembayaran.index', compact('pembayarans'));
+        $baseQuery = Pembayaran::whereHas('kos', function ($query) use ($user) {
+            $query->where('pemilik_id', $user->id);
+        })->with(['kos', 'penyewa']);
+
+        // Aggregates (tanpa filter pencarian agar statistik menyeluruh)
+        $totalPembayaran = (clone $baseQuery)->count();
+        $pendingCount = (clone $baseQuery)->where('status', 'pending')->count();
+        $lunasCount = (clone $baseQuery)->where('status', 'lunas')->count();
+        $terlambatCount = (clone $baseQuery)->where('status', 'terlambat')->count();
+        $totalLunasAmount = (clone $baseQuery)->where('status', 'lunas')->sum('jumlah');
+
+        // Terapkan filter pencarian
+        $query = clone $baseQuery;
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('metode')) {
+            $query->where('metode', $request->metode);
+        }
+
+        if ($request->filled('search')) {
+            $query->whereHas('penyewa', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $pembayarans = $query->latest()->paginate(15)->withQueryString();
+
+        return view('pemilik.pembayaran.index', compact(
+            'pembayarans',
+            'totalPembayaran',
+            'pendingCount',
+            'lunasCount',
+            'terlambatCount',
+            'totalLunasAmount'
+        ));
     }
 
     public function create()

@@ -36,6 +36,11 @@ Route::prefix('pemilik')->name('pemilik.')->middleware(['auth', 'pemilik'])->gro
     Route::get('/kos/{kos}/edit', [PemilikDashboardController::class, 'edit'])->name('kos.edit');
     Route::put('/kos/{kos}', [PemilikDashboardController::class, 'update'])->name('kos.update');
     Route::get('/bookings', [PemilikDashboardController::class, 'bookings'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [PemilikDashboardController::class, 'showBooking'])->name('bookings.show');
+    Route::get('/bookings/{booking}/approve', [PemilikDashboardController::class, 'approvePage'])->name('bookings.approve.page');
+    Route::get('/bookings/{booking}/reject', [PemilikDashboardController::class, 'rejectPage'])->name('bookings.reject.page');
+    Route::post('/bookings/{booking}/approve', [PemilikDashboardController::class, 'approveBooking'])->name('bookings.approve');
+    Route::post('/bookings/{booking}/reject', [PemilikDashboardController::class, 'rejectBooking'])->name('bookings.reject');
     Route::get('/pembayaran', [PemilikDashboardController::class, 'pembayaran'])->name('pembayaran.index');
 });
 

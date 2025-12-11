@@ -213,10 +213,10 @@
                 <p class="section-subtitle">4 langkah mudah untuk menemukan kos impian Anda</p>
             </div>
 
-            <div class="row g-4 align-items-center">
+            <div class="row g-4 justify-content-center">
                 <!-- Step 1 -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="step-card">
+                    <div class="step-card text-center">
                         <div class="step-number">1</div>
                         <div class="step-icon">
                             <i class="bi bi-search"></i>
@@ -227,14 +227,9 @@
                     </div>
                 </div>
 
-                <!-- Arrow -->
-                <div class="col-lg-3 text-center d-none d-lg-block">
-                    <i class="bi bi-arrow-right text-primary step-arrow"></i>
-                </div>
-
                 <!-- Step 2 -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="step-card">
+                    <div class="step-card text-center">
                         <div class="step-number">2</div>
                         <div class="step-icon">
                             <i class="bi bi-heart-fill"></i>
@@ -244,14 +239,9 @@
                     </div>
                 </div>
 
-                <!-- Arrow -->
-                <div class="col-lg-3 text-center d-none d-lg-block">
-                    <i class="bi bi-arrow-right text-primary step-arrow"></i>
-                </div>
-
                 <!-- Step 3 -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="step-card">
+                    <div class="step-card text-center">
                         <div class="step-number">3</div>
                         <div class="step-icon">
                             <i class="bi bi-calendar-check"></i>
@@ -261,14 +251,9 @@
                     </div>
                 </div>
 
-                <!-- Arrow -->
-                <div class="col-lg-3 text-center d-none d-lg-block">
-                    <i class="bi bi-arrow-right text-primary step-arrow"></i>
-                </div>
-
                 <!-- Step 4 -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="step-card">
+                    <div class="step-card text-center">
                         <div class="step-number">4</div>
                         <div class="step-icon">
                             <i class="bi bi-check-circle"></i>

@@ -14,8 +14,16 @@
 </head>
 
 <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <a href="{{ route('pemilik.dashboard') }}" class="sidebar-brand">
             <i class="bi bi-house-heart-fill"></i>
             <span>Roomify</span>
@@ -291,6 +299,35 @@
     </main>
 
     @vite(['resources/js/app.js'])
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
+
+        mobileMenuToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking menu items on mobile
+        if (window.innerWidth <= 768) {
+            const sidebarLinks = sidebar.querySelectorAll('.sidebar-menu a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    // Don't close if it's the logout link (let form submit)
+                    if (!this.closest('form')) {
+                        toggleSidebar();
+                    }
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>
