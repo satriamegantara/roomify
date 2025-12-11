@@ -10,10 +10,17 @@
     <div class="chat-container">
         <!-- Header -->
         <div class="chat-header">
-            <h1 class="header-title">
-                <i class="bi bi-chat-dots"></i>Pesan
-            </h1>
-            <p class="header-subtitle">Komunikasi langsung dengan pemilik dan penyewa kos</p>
+            <a href="{{ auth()->user()->role === 'pemilik' ? route('pemilik.dashboard') : route('dashboard') }}"
+                class="back-btn" title="Kembali">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+            <div style="flex: 1; text-align: center;">
+                <h1 class="header-title">
+                    <i class="bi bi-chat-dots"></i>Pesan
+                </h1>
+                <p class="header-subtitle">Komunikasi langsung dengan pemilik dan penyewa kos</p>
+            </div>
+            <div style="width: 44px;"></div>
         </div>
 
         <div class="chat-wrapper">

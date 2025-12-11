@@ -10,6 +10,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PemilikDashboardController;
 use App\Http\Controllers\AdminKosController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminPembayaranController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +53,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/kos', [AdminKosController::class, 'index'])->name('kos.index');
     Route::post('/kos/{kos}/verify', [AdminKosController::class, 'verify'])->name('kos.verify');
     Route::post('/kos/{kos}/status', [AdminKosController::class, 'updateStatus'])->name('kos.status');
+
+    // User Management
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/verify', [AdminUserController::class, 'verify'])->name('users.verify');
+    Route::post('/users/{user}/reject', [AdminUserController::class, 'reject'])->name('users.reject');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+    // Payment Management
+    Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::get('/pembayaran/{pembayaran}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
 });
 
 // Authenticated routes
@@ -85,6 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/start/{user}', [ChatController::class, 'startChat'])->name('start');
         Route::get('/{chat}', [ChatController::class, 'show'])->name('show');
         Route::post('/send', [ChatController::class, 'send'])->name('send');
+        Route::delete('/{chat}', [ChatController::class, 'destroy'])->name('destroy');
     });
 });
 

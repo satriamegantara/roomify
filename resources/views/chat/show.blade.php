@@ -34,6 +34,9 @@
                 <button class="icon-btn" title="Informasi" data-bs-toggle="offcanvas" data-bs-target="#chatInfo">
                     <i class="bi bi-info-circle"></i>
                 </button>
+                <button class="icon-btn btn-danger-light" title="Hapus Chat" id="deleteChatBtn">
+                    <i class="bi bi-trash"></i>
+                </button>
             </div>
         </div>
 
@@ -179,6 +182,47 @@
                         }
                     });
             }, 2000);
+
+            // Delete chat functionality
+            const deleteChatBtn = document.getElementById('deleteChatBtn');
+            if (deleteChatBtn) {
+                deleteChatBtn.addEventListener('click', function () {
+                    if (confirm('Apakah Anda yakin ingin menghapus chat ini? Notifikasi akan dikirim ke orang lain.')) {
+                        const chatId = window.location.pathname.split('/').pop();
+                        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+                        console.log('Chat ID:', chatId);
+                        console.log('Token:', token);
+
+                        fetch(`/chat/${chatId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-Token': token,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        })
+                            .then(response => {
+                                console.log('Response status:', response.status);
+                                return response.json().catch(() => response.text());
+                            })
+                            .then(data => {
+                                console.log('Response data:', data);
+                                if (typeof data === 'object' && data.success) {
+                                    alert('Chat berhasil dihapus dan notifikasi telah dikirim ke orang lain');
+                                    window.location.href = '/chat';
+                                } else {
+                                    alert('Gagal menghapus chat: ' + (data.message || data));
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Gagal menghapus chat: ' + error.message);
+                            });
+                    }
+                });
+            }
         </script>
     @endpush
 @endsection

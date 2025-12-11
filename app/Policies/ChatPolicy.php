@@ -11,4 +11,9 @@ class ChatPolicy
     {
         return $user->id === $chat->sender_id || $user->id === $chat->receiver_id;
     }
+
+    public function delete(User $user, Chat $chat): bool
+    {
+        return $user->id === $chat->sender_id || $user->id === $chat->receiver_id;
+    }
 }

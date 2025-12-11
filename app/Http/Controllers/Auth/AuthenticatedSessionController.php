@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
         if ($user->role === 'pemilik') {
             return redirect()->intended(route('pemilik.dashboard', absolute: false));
         } elseif ($user->role === 'admin') {
-            return redirect()->intended(route('admin.kos.index', absolute: false));
+            return redirect()->intended(route('admin.dashboard', absolute: false));
         }
 
         // Default redirect for penyewa

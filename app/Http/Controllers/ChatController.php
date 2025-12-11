@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chat;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,12 +17,20 @@ class ChatController extends Controller
 
     public function index(): View
     {
-        $chats = Chat::where('sender_id', auth()->id())
-            ->orWhere('receiver_id', auth()->id())
+        // Get current user's chats grouped by conversation partner
+        $chats = Chat::withoutTrashed()
+            ->where(function ($query) {
+                $query->where('sender_id', auth()->id())
+                    ->orWhere('receiver_id', auth()->id());
+            })
             ->with('sender', 'receiver')
-            ->distinct()
             ->latest()
-            ->get();
+            ->get()
+            ->unique(function ($chat) {
+                // Group by conversation partner
+                return $chat->sender_id === auth()->id() ? $chat->receiver_id : $chat->sender_id;
+            })
+            ->values();
 
         return view('chat.index', compact('chats'));
     }
@@ -36,18 +45,18 @@ class ChatController extends Controller
         })->orWhere(function ($query) use ($chat) {
             $query->where('sender_id', $chat->sender_id === auth()->id() ? $chat->receiver_id : $chat->sender_id)
                 ->where('receiver_id', auth()->id());
-        })->oldest()->get();
+        })->withoutTrashed()->oldest()->get();
 
         $otherId = $chat->sender_id === auth()->id() ? $chat->receiver_id : $chat->sender_id;
         $user = $chat->sender_id === auth()->id() ? $chat->receiver : $chat->sender;
 
-        return view('chat.show', compact('messages', 'otherId', 'user'));
+        return view('chat.show', compact('messages', 'otherId', 'user', 'chat'));
     }
 
     public function startChat(User $user)
     {
         // Find existing chat between current user and target user
-        $existingChat = Chat::where(function ($query) use ($user) {
+        $existingChat = Chat::withoutTrashed()->where(function ($query) use ($user) {
             $query->where('sender_id', auth()->id())
                 ->where('receiver_id', $user->id);
         })->orWhere(function ($query) use ($user) {
@@ -60,7 +69,7 @@ class ChatController extends Controller
         }
 
         // Get first non-empty message or use placeholder for empty state
-        $chat = Chat::where(function ($query) use ($user) {
+        $chat = Chat::withoutTrashed()->where(function ($query) use ($user) {
             $query->where('sender_id', auth()->id())
                 ->where('receiver_id', $user->id);
         })->orWhere(function ($query) use ($user) {
@@ -94,7 +103,7 @@ class ChatController extends Controller
         ]);
 
         // Get the latest chat to redirect to show page
-        $lastChat = Chat::where(function ($query) use ($validated) {
+        $lastChat = Chat::withoutTrashed()->where(function ($query) use ($validated) {
             $query->where('sender_id', auth()->id())
                 ->where('receiver_id', $validated['receiver_id']);
         })->orWhere(function ($query) use ($validated) {
@@ -107,5 +116,34 @@ class ChatController extends Controller
         }
 
         return redirect()->route('chat.show', $lastChat);
+    }
+
+    public function destroy(Chat $chat)
+    {
+        $this->authorize('delete', $chat);
+
+        $otherUserId = $chat->sender_id === auth()->id() ? $chat->receiver_id : $chat->sender_id;
+
+        // Soft delete the chat
+        $chat->update(['deleted_by' => auth()->id()]);
+        $chat->delete();
+
+        // Create notification for the other user
+        Notification::create([
+            'user_id' => $otherUserId,
+            'type' => 'chat_deleted',
+            'data' => [
+                'deleter_id' => auth()->id(),
+                'deleter_name' => auth()->user()->name,
+                'chat_id' => $chat->id,
+                'message' => 'Pesan chat telah dihapus oleh ' . auth()->user()->name,
+            ],
+        ]);
+
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Chat berhasil dihapus']);
+        }
+
+        return redirect()->route('chat.index')->with('success', 'Chat berhasil dihapus');
     }
 }

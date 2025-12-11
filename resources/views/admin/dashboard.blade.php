@@ -16,6 +16,29 @@
             <p class="header-subtitle">Kelola dan pantau semua aktivitas platform Roomify</p>
         </div>
 
+        <!-- Management Buttons -->
+        <div class="management-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+            <a href="{{ route('admin.users.index') }}" class="management-btn" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s;">
+                <i class="bi bi-person-check" style="font-size: 1.5rem;"></i>
+                <span>Verifikasi User</span>
+            </a>
+            <a href="{{ route('admin.kos.index') }}" class="management-btn" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s;">
+                <i class="bi bi-house-check" style="font-size: 1.5rem;"></i>
+                <span>Verifikasi Kos</span>
+            </a>
+            <a href="{{ route('admin.pembayaran.index') }}" class="management-btn" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s;">
+                <i class="bi bi-cash-stack" style="font-size: 1.5rem;"></i>
+                <span>Manajemen Pembayaran</span>
+            </a>
+        </div>
+
+        <style>
+            .management-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+
         <!-- Stats Grid -->
         <div class="stats-grid">
             <!-- Users Section -->
@@ -56,6 +79,16 @@
                 <div class="stat-content">
                     <div class="stat-value">{{ $admins }}</div>
                     <div class="stat-label">Admin</div>
+                </div>
+            </div>
+
+            <div class="stat-card unverified">
+                <div class="stat-icon">
+                    <i class="bi bi-exclamation-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ $unverifiedUsers }}</div>
+                    <div class="stat-label">User Menunggu Verifikasi</div>
                 </div>
             </div>
 

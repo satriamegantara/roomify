@@ -18,6 +18,8 @@ class AdminDashboardController extends Controller
         $pemiliks = User::where('role', 'pemilik')->count();
         $penyewas = User::where('role', 'penyewa')->count();
         $admins = User::where('role', 'admin')->count();
+        $unverifiedUsers = User::where('is_verified', false)->count();
+        $verifiedUsers = User::where('is_verified', true)->count();
 
         // Kos Stats
         $totalKos = Kos::count();
@@ -52,6 +54,8 @@ class AdminDashboardController extends Controller
             'pemiliks',
             'penyewas',
             'admins',
+            'unverifiedUsers',
+            'verifiedUsers',
             'totalKos',
             'verifiedKos',
             'unverifiedKos',

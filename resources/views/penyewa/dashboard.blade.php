@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @push('styles')
-    @vite('resources/css/penyewa-dashboard.css')
+    @vite(['resources/css/penyewa-dashboard.css', 'resources/css/notifications.css'])
 @endpush
 
 @section('title', 'Dashboard Penyewa')
@@ -15,6 +15,28 @@
             </h1>
             <p class="header-subtitle">Kelola booking dan pembayaran kos Anda dengan mudah.</p>
         </div>
+
+        <!-- Notifications -->
+        @if ($notifications->count() > 0)
+            <div class="notifications-section">
+                @foreach ($notifications as $notification)
+                    <div class="notification-alert {{ $notification->type === 'chat_deleted' ? 'alert-info' : 'alert-primary' }}">
+                        <div class="notification-icon">
+                            @if ($notification->type === 'chat_deleted')
+                                <i class="bi bi-chat-left-x"></i>
+                            @else
+                                <i class="bi bi-bell"></i>
+                            @endif
+                        </div>
+                        <div class="notification-content">
+                            <p class="notification-message">{{ $notification->data['message'] ?? '' }}</p>
+                            <span class="notification-time">{{ $notification->created_at->diffForHumans() }}</span>
+                        </div>
+                        <button type="button" class="btn-close" data-notification-id="{{ $notification->id }}"></button>
+                    </div>
+                @endforeach
+            </div>
+        @endif
 
         <!-- Stats Grid -->
         <div class="stats-grid">
@@ -248,4 +270,22 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            // Close notification
+            document.querySelectorAll('[data-notification-id]').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const notificationId = this.getAttribute('data-notification-id');
+                    const alert = this.closest('.notification-alert');
+
+                    // Fade out animation
+                    alert.style.animation = 'slideOutUp 0.3s ease';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                });
+            });
+        </script>
+    @endpush
 @endsection
