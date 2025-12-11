@@ -1,0 +1,387 @@
+/* Auth Pages Styling - Login, Register, Forgot Password */
+
+/* Common Container Styles */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #10a37f 0%, #059669 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-container.register-page {
+    padding: 2rem 0;
+}
+
+.auth-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,197.3C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>')
+        no-repeat bottom;
+    background-size: cover;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Card Styles */
+.auth-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.5s ease-out;
+}
+
+.auth-card.simple {
+    padding: 3rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Left Side - Illustration */
+.auth-left {
+    background: linear-gradient(135deg, #10a37f 0%, #059669 100%);
+    padding: 3rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.auth-left::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><circle cx="100" cy="100" r="60" fill="rgba(255,255,255,0.05)"/><circle cx="300" cy="300" r="80" fill="rgba(255,255,255,0.05)"/><circle cx="250" cy="100" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+    opacity: 0.4;
+}
+
+.auth-illustration {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-illustration i {
+    opacity: 0.9;
+    animation: float 3s ease-in-out infinite;
+}
+
+.auth-illustration i.login-icon {
+    font-size: 120px;
+}
+
+.auth-illustration i.register-icon {
+    font-size: 100px;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Right Side - Form */
+.auth-right {
+    padding: 3rem;
+}
+
+/* Logo & Text */
+.logo-text {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+.welcome-text {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+/* Feature & Benefit Lists */
+.feature-list,
+.benefit-list {
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.feature-item,
+.benefit-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover,
+.benefit-item:hover {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+.feature-item i,
+.benefit-item i {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+.feature-item span,
+.benefit-item span {
+    color: white;
+}
+
+/* Form Styles */
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1.5px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #10a37f;
+    box-shadow: 0 0 0 0.2rem rgba(16, 163, 127, 0.25);
+}
+
+.form-floating label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.form-floating .form-control,
+.form-floating .form-select {
+    border-radius: 10px;
+    border: 1.5px solid #e5e7eb;
+}
+
+.form-floating > .form-control::placeholder {
+    color: transparent;
+}
+
+.form-check-input {
+    border-color: #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+    background-color: #10a37f;
+    border-color: #10a37f;
+}
+
+.form-check-input:focus {
+    border-color: #10a37f;
+    box-shadow: 0 0 0 0.2rem rgba(16, 163, 127, 0.25);
+}
+
+.form-check-label {
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Button Styles */
+.btn-auth {
+    background: linear-gradient(135deg, #10a37f 0%, #059669 100%);
+    border: none;
+    color: white;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+.btn-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 163, 127, 0.4);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+}
+
+.btn-auth:active {
+    transform: translateY(0);
+}
+
+.btn-outline-secondary {
+    color: #059669;
+    border-color: #d1d5db;
+    font-weight: 600;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f3f4f6;
+    border-color: #059669;
+    color: #059669;
+}
+
+/* Icon Wrapper for Forgot Password */
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #10a37f 0%, #059669 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.icon-wrapper i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 163, 127, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 15px rgba(16, 163, 127, 0);
+    }
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: 1px solid;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background-color: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.alert-success i,
+.alert-danger i {
+    opacity: 0.8;
+}
+
+/* Links Styling */
+a.text-decoration-none {
+    transition: all 0.3s ease;
+}
+
+a.text-decoration-none:hover {
+    text-decoration: underline !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 1rem;
+    }
+
+    .auth-left {
+        display: none;
+    }
+
+    .auth-right {
+        padding: 2rem 1.5rem;
+    }
+
+    .auth-card.simple {
+        padding: 2rem 1.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 16px;
+    }
+
+    .btn-auth {
+        padding: 0.65rem 1.5rem;
+    }
+
+    .logo-text {
+        font-size: 1.5rem;
+    }
+
+    .welcome-text {
+        font-size: 0.95rem;
+    }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .icon-wrapper i {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-right {
+        padding: 1.5rem 1rem;
+    }
+
+    .auth-card.simple {
+        padding: 1.5rem 1rem;
+    }
+
+    .btn-auth {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+}

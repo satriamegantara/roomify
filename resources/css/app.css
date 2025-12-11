@@ -1,0 +1,23 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "./kosan-theme.css";
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+/* Hide scrollbar for Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+* {
+    -ms-overflow-style: none;
+}
