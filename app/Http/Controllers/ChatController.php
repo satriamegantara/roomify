@@ -55,30 +55,27 @@ class ChatController extends Controller
 
     public function startChat(User $user)
     {
-        // Find existing chat between current user and target user
-        $existingChat = Chat::withoutTrashed()->where(function ($query) use ($user) {
-            $query->where('sender_id', auth()->id())
-                ->where('receiver_id', $user->id);
-        })->orWhere(function ($query) use ($user) {
-            $query->where('sender_id', $user->id)
-                ->where('receiver_id', auth()->id());
-        })->where('message', '!=', '')->latest()->first();
+        // Cek apakah sudah pernah ada percakapan dengan user ini (termasuk yang pernah dihapus)
+        $chat = Chat::withTrashed()
+            ->where(function ($query) use ($user) {
+                $query->where('sender_id', auth()->id())
+                    ->where('receiver_id', $user->id);
+            })
+            ->orWhere(function ($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                    ->where('receiver_id', auth()->id());
+            })
+            ->latest()
+            ->first();
 
-        if ($existingChat) {
-            return redirect()->route('chat.show', $existingChat);
+        // Kalau pernah dihapus, hidupkan lagi supaya tidak 404 saat dibuka
+        if ($chat && $chat->trashed()) {
+            $chat->restore();
+            $chat->update(['deleted_by' => null]);
         }
 
-        // Get first non-empty message or use placeholder for empty state
-        $chat = Chat::withoutTrashed()->where(function ($query) use ($user) {
-            $query->where('sender_id', auth()->id())
-                ->where('receiver_id', $user->id);
-        })->orWhere(function ($query) use ($user) {
-            $query->where('sender_id', $user->id)
-                ->where('receiver_id', auth()->id());
-        })->latest()->first();
-
+        // Jika belum ada chat sama sekali, buat placeholder kosong
         if (!$chat) {
-            // Create placeholder chat for new conversation (empty message is OK)
             $chat = Chat::create([
                 'sender_id' => auth()->id(),
                 'receiver_id' => $user->id,

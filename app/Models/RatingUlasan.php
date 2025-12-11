@@ -11,7 +11,7 @@ class RatingUlasan extends Model
     /** @use HasFactory<\Database\Factories\RatingUlasanFactory> */
     use HasFactory;
 
-    protected $table = 'ratings_ulasans';
+    protected $table = 'rating_ulasan';
 
     protected $fillable = [
         'penyewa_id',

@@ -12,7 +12,7 @@ class Chat extends Model
     /** @use HasFactory<\Database\Factories\ChatFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $table = 'chats';
+    protected $table = 'chat';
 
     protected $fillable = [
         'sender_id',

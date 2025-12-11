@@ -11,7 +11,7 @@ class Pembayaran extends Model
     /** @use HasFactory<\Database\Factories\PembayaranFactory> */
     use HasFactory;
 
-    protected $table = 'pembayarans';
+    protected $table = 'pembayaran';
 
     protected $fillable = [
         'penyewa_id',

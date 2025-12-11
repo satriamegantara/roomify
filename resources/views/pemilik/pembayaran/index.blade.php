@@ -25,8 +25,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <a href="{{ route('pemilik.dashboard') }}" class="sidebar-brand">
-            <i class="bi bi-house-heart-fill"></i>
-            <span>Roomify</span>
+            <img src="{{ asset('assets/images/test.png') }}" alt="Roomify Logo" height="40" class="me-2 logo-img"><span>Roomify</span>
         </a>
 
         <ul class="sidebar-menu">
